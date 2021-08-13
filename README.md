@@ -69,6 +69,8 @@ printenv | grep ROS
 ```
 (If not, redo the environment setup part)
 
+Now, ROS is available by calling roscore
+
 ## Create a ROS workspace
 Create and build a catkin workspace:
 ```
@@ -96,19 +98,18 @@ sudo apt-get install python-catkin-tools python3-dev python3-numpy
 Create new catkin_build_ws to avoid any future problems with catkin_make(assuming you are using it) and config catkin to use your python 3(3.6 in my case) when building packages
 Install in system python
 ```
-mkdir ~/catkin_build_ws && cd ~/catkin_build_ws
+mkdir -p ~/catkin_build_ws/src && cd ~/catkin_build_ws
 catkin config -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.5m -DPYTHON_LIBRARY=/usr/lib/arm-linux-gnueabihf/libpython3.5m.so
 catkin config --install
 ```
 or install under miniconda
 ```
-mkdir ~/catkin_build_ws && cd ~/catkin_build_ws
+mkdir -p ~/catkin_build_ws/src && cd ~/catkin_build_ws
 catkin config -DPYTHON_EXECUTABLE=/home/ran/miniconda3/bin/python3 -DPYTHON_INCLUDE_DIR=/home/ran/miniconda3/bin/python3.5m -DPYTHON_LIBRARY=/home/ran/miniconda3/lib/libpython3.5m.so
 catkin config --install
 ```
 clone official vision_opencv repo:
 ```
-mkdir src
 cd src
 git clone -b melodic https://github.com/ros-perception/vision_opencv.git
 ```
@@ -120,8 +121,8 @@ source install/setup.bash --extend
 ```
 Now, cv_bridge is available in Python 3
 
-
-
+## Install ONNX
+(ongoing)
 
 ## Error message 
 1. ImportError: No module named Cryptodome.Cipher
@@ -140,3 +141,5 @@ sudo pip3 install rospkg catkin_pkg
 - ROS installation guide for TinkerBoard. http://nascivera.it/2017/11/20/ros-installation-guide-for-tinkerboard/
 - ROS Tutorials. http://wiki.ros.org/ROS/Tutorials
 - ROS Python2 & Python3 conflict Resolve. https://rancheng.github.io/ros-python2-3-conflict/
+- ONNX github. https://github.com/onnx/onnx
+  
