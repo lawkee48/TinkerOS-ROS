@@ -112,6 +112,7 @@ clone official vision_opencv repo:
 ```
 cd src
 git clone -b melodic https://github.com/ros-perception/vision_opencv.git
+pip3 install catkin_pkg 
 ```
 Finally, build and source the package:
 ```
