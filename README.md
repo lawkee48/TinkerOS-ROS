@@ -127,17 +127,36 @@ Now, cv_bridge is available in Python 3
 
 ## Error message 
 1. ImportError: No module named Cryptodome.Cipher
+
 Solution:
 ```
 sudo apt install python3-pip python-pip
 pip install pycryptodomex
 ```
 2. ImportError: No module named 'yaml'
+
+Solution:
 ```
 sudo apt-get install python3-pip python3-yaml
 sudo pip3 install rospkg catkin_pkg
 ```
+3. terminate called after throwing an instance of 'rospack::Exception' what(): error parsing manifest of package rosmaster at /opt/ros/melodic/share/rosmaster/package.xml
+aborted
 
+Solution:
+  ```
+  unsolved
+  ```
+4. CMake Error at /opt/ros/melodic/share/catkin/cmake/catkinConfig cmake:172 (find_package): Could not find a package configuration file provided by "cv_bridge" with any of the following names:
+  
+  sensor_msgsConfig.cmake
+  
+  sensor_msgss-config.cmake
+
+  Solution:
+  ```
+  unsolved
+  ```
 ## Reference
 - ROS installation guide for TinkerBoard. http://nascivera.it/2017/11/20/ros-installation-guide-for-tinkerboard/
 - ROS Tutorials. http://wiki.ros.org/ROS/Tutorials
