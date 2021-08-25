@@ -147,7 +147,7 @@ Solution:
   ```
   unsolved
   ```
-4. CMake Error at /opt/ros/melodic/share/catkin/cmake/catkinConfig cmake:172 (find_package): Could not find a package configuration file provided by "cv_bridge" with any of the following names:
+4. CMake Error at /opt/ros/melodic/share/catkin/cmake/catkinConfig cmake:83 (find_package): Could not find a package configuration file provided by "cv_bridge" with any of the following names:
   
   sensor_msgsConfig.cmake
   
