@@ -155,8 +155,16 @@ Solution:
 
   Solution:
   ```
-  unsolved
+  cd ros_catkin_ws/src/
+  rm -rf common_msgs/
+  git clone https://github.com/ros/common_msgs.git
+  cd ..
+  sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic
+  source devel_isolated/setup.bash
   ```
+5. Subprocess.CalledProcessError: Command '['/usr/local/bin/cmake', '--build', '/home/linaro/Downloads/onnxruntime/build/Linux/MinSizeRel', '--config', 'MinSizeRel']' returned non-zero exit status 2.
+  
+  
 ## Reference
 - ROS installation guide for TinkerBoard. http://nascivera.it/2017/11/20/ros-installation-guide-for-tinkerboard/
 - ROS Tutorials. http://wiki.ros.org/ROS/Tutorials
