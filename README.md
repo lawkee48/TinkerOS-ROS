@@ -125,6 +125,14 @@ Now, cv_bridge is available in Python 3
 ## Install ONNX
 (ongoing)
 
+## Install onnxruntime
+Onnxruntime is neither avaiable in ```pip3 install``` nor build from [source](https://github.com/microsoft/onnxruntime) due to the platform architecture of armv7l. The possible solution is build through docker, then extract the python wheel from docker.
+- Install docker
+command ```curl -sSL https://get.docker.com/ | sh``` doesn't work, it ends up with an error ```E: Unable to locate package docker-ce-rootless-extras```, because Debian 9 reached EOL and no longer supported, the required package is only available from Ubuntu 20.x (see [here](https://github.com/docker/docker-install/issues/222)).
+
+To solve this problem, follow the manual installation procedure (Section: Install from a package) from https://docs.docker.com/engine/install/debian/. I recommand to select the v19.03.15 of Docker since it works for the [others](https://forums.docker.com/t/google-unable-to-locate-package-docker-ce-rootless-extras/107071/2).
+
+
 ## Error message 
 1. ImportError: No module named Cryptodome.Cipher
 
@@ -163,6 +171,19 @@ Solution:
   source devel_isolated/setup.bash
   ```
 5. Subprocess.CalledProcessError: Command '['/usr/local/bin/cmake', '--build', '/home/linaro/Downloads/onnxruntime/build/Linux/MinSizeRel', '--config', 'MinSizeRel']' returned non-zero exit status 2.
+  
+6. docker build onnxruntime error
+```
+tools_python_utils [INFO] - flatbuffers module is not installed. parse_config will not be available
+build [DEBUG] - Command line arguements:
+  --build_dir /code/build/Linux --skip_submodule_sync --config Release --build_wheel --update --build --parallel --cmake_extra_defines ONNXRUNTIME_VERSION=1.8.2
+build [ERROR] - Failed to resolve executable path for 'cmake'.
+```
+
+Solution:
+```
+docker pull gcc???????????????
+```
   
   
 ## Reference
