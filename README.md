@@ -136,9 +136,15 @@ Now, encounter an error of:
 ```  
 Subprocess.CalledProcessError: Command '['/usr/local/bin/cmake', '--build', '/home/linaro/Downloads/onnxruntime/build/Linux/MinSizeRel', '--config', 'MinSizeRel']' returned non-zero exit status 2.
 ```
-IN THE RESOLVING STAGE.
+**/////////////////////////////////// BUILD_PROCESS TBC ///////////////////////////////////**
+Test by running `import onnxruntime`:
+Although it will report a warning message as below, it will not affect its functionality.
+```
+/home/linaro/.local/lib/python3.5/site-packages/onnxruntime/capi/onnxruntime_validation.py:22: UserWarning: Unsupported architecture (32bit). ONNX Runtime supports 64bit architecture, only.
+warnings.warn('Unsupported architecture (%s). ONNX Runtime supports 64bit architecture, only.' % __my_arch__)
+```
 
-## Error message 
+  ## Error message 
 1. **ImportError: No module named Cryptodome.Cipher**
 
 Solution:
