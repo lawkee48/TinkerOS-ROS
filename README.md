@@ -132,63 +132,129 @@ command ```curl -sSL https://get.docker.com/ | sh``` doesn't work, it ends up wi
 
 To solve this problem, follow the manual installation procedure (Section: Install from a package) from https://docs.docker.com/engine/install/debian/. I recommand to select the v19.03.15 of Docker since it works for the [others](https://forums.docker.com/t/google-unable-to-locate-package-docker-ce-rootless-extras/107071/2).
 
+Now, encounter an error of:
+```  
+Subprocess.CalledProcessError: Command '['/usr/local/bin/cmake', '--build', '/home/linaro/Downloads/onnxruntime/build/Linux/MinSizeRel', '--config', 'MinSizeRel']' returned non-zero exit status 2.
+```
+IN THE RESOLVING STAGE.
 
 ## Error message 
-1. ImportError: No module named Cryptodome.Cipher
+1. **ImportError: No module named Cryptodome.Cipher**
 
 Solution:
 ```
 sudo apt install python3-pip python-pip
 pip install pycryptodomex
 ```
-2. ImportError: No module named 'yaml'
+2. **ImportError: No module named 'yaml'**
 
 Solution:
 ```
 sudo apt-get install python3-pip python3-yaml
 sudo pip3 install rospkg catkin_pkg
 ```
-3. terminate called after throwing an instance of 'rospack::Exception' what(): error parsing manifest of package rosmaster at /opt/ros/melodic/share/rosmaster/package.xml
-aborted
-
-Solution:
-  ```
-  unsolved
-  ```
-4. CMake Error at /opt/ros/melodic/share/catkin/cmake/catkinConfig cmake:83 (find_package): Could not find a package configuration file provided by "cv_bridge" with any of the following names:
-  
-  sensor_msgsConfig.cmake
-  
-  sensor_msgss-config.cmake
-
-  Solution:
-  ```
-  cd ros_catkin_ws/src/
-  rm -rf common_msgs/
-  git clone https://github.com/ros/common_msgs.git
-  cd ..
-  sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic
-  source devel_isolated/setup.bash
-  ```
-5. Subprocess.CalledProcessError: Command '['/usr/local/bin/cmake', '--build', '/home/linaro/Downloads/onnxruntime/build/Linux/MinSizeRel', '--config', 'MinSizeRel']' returned non-zero exit status 2.
-  
-6. docker build onnxruntime error
+3. **rospack error**
 ```
+terminate called after throwing an instance of 'rospack::Exception' what(): error parsing manifest of package rosmaster at /opt/ros/melodic/share/rosmaster/package.xml
+aborted
+```
+```
+remain unsolved
+```
+
+4. 
+```
+CMake Error at /opt/ros/melodic/share/catkin/cmake/catkinConfig cmake:83 (find_package): Could not find a package configuration file provided by "cv_bridge" with any of the following names:
+  
+sensor_msgsConfig.cmake
+sensor_msgss-config.cmake
+```
+**Solution:**
+```
+cd ros_catkin_ws/src/
+rm -rf common_msgs/
+git clone https://github.com/ros/common_msgs.git
+cd ..
+sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic
+source devel_isolated/setup.bash
+```
+  
+5. **Docker build onnxruntime arm32v7l python wheel Error**
+
+Problem with the libseccomp2 package on the host:
+```
+Fatal Python error: init_interp_main: can't initialize time
+Python runtime state: core initialized 
+PermissionError: [Errno 1] Operation not permitted
+```
+
+**Solution:**
+It can be resolved by downloading and installing a newer `libseccomp2.deb`.
+```
+wget http://ftp.us.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.1-1_armhf.deb
+sudo dpkg -i libseccomp2_2.5.1-1_armhf.deb
+```
+
+6. **Cannot find executable path for 'cmake'** 
+```  
 tools_python_utils [INFO] - flatbuffers module is not installed. parse_config will not be available
 build [DEBUG] - Command line arguements:
   --build_dir /code/build/Linux --skip_submodule_sync --config Release --build_wheel --update --build --parallel --cmake_extra_defines ONNXRUNTIME_VERSION=1.8.2
 build [ERROR] - Failed to resolve executable path for 'cmake'.
 ```
+  
+**Solution:**
+Install cmake on your host machine.
+  
+7. **build cmake error:**
+**error 1**
+```
+CMake Error at Utilities/cmcurl/CMakeLists.txt:525 (message):
+  Could not find OpenSSL.  Install an OpenSSL development package or
+  configure CMake with -DCMAKE_USE_OPENSSL=OFF to build without OpenSSL.
+```
+**error 2**
+```
+CMake Error at CMakeLists.txt:425 (message):
+  CMAKE_USE_SYSTEM_ZLIB is ON but a zlib is not found!
+Call Stack (most recent call first):
+  CMakeLists.txt:710 (CMAKE_BUILD_UTILITIES)
+```
+**error 3**
+```
+CMake Error at CMakeLists.txt:480 (message):
+  CMAKE_USE_SYSTEM_CURL is ON but a curl is not found!
+Call Stack (most recent call first):
+  CMakeLists.txt:777 (CMAKE_BUILD_UTILITIES)
+```
+**Solution 1:**
+```
+sudo apt-get install openssl
+sudo apt-get install libssl-dev
+```
+**Solution 2:**
+```
+cd ~/temp
+wget https://nchc.dl.sourceforge.net/project/libpng/zlib/1.2.11/zlib-1.2.11.tar.gz
+tar -xvf zlib-1.2.11.tar.gz
+cd zlib-1.2.11/
+./configure --prefix=/usr/local/zlib-1.2.11
+make
+sudo make install
+export LD_LIBRARY_PATH=/usr/local/zlib-1.2.11/lib:$LD_LIBRARY_PATH
+```
+**Solution 3:**
+```
+sudo apt-get install curl
+sudo apt-get install libssl-dev libcurl4-openssl-dev
+```
 
-Solution:
-```
-docker pull gcc???????????????
-```
-  
-  
-## Reference
+  ## Reference
 - ROS installation guide for TinkerBoard. http://nascivera.it/2017/11/20/ros-installation-guide-for-tinkerboard/
 - ROS Tutorials. http://wiki.ros.org/ROS/Tutorials
 - ROS Python2 & Python3 conflict Resolve. https://rancheng.github.io/ros-python2-3-conflict/
 - ONNX github. https://github.com/onnx/onnx
-  
+- Microsoft onnxruntime github. https://github.com/microsoft/onnxruntime
+- NagarajSMurthy RaspberryPi-ONNX-Runtime github. https://github.com/NagarajSMurthy/RaspberryPi-ONNX-Runtime
+- ankane onnxruntime github. https://github.com/ankane/onnxruntime-1
+- SAj1234 onnxruntime github. https://github.com/Saj1234/onnxruntime
