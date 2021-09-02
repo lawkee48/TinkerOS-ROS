@@ -169,7 +169,7 @@ aborted
 remain unsolved
 ```
 
-4. 
+4. **Could not find sensor_msgs packages**
 ```
 CMake Error at /opt/ros/melodic/share/catkin/cmake/catkinConfig cmake:83 (find_package): Could not find a package configuration file provided by "cv_bridge" with any of the following names:
   
