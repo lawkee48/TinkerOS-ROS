@@ -1,0 +1,50 @@
+FROM balenalib/raspberrypi3-python:3.PYTHON_MINOR_VERSION-buster-build
+
+ARG ONNXRUNTIME_REPO=https://github.com/Microsoft/onnxruntime
+ARG ONNXRUNTIME_SERVER_BRANCH=vONNXRUNTIME_VERSION
+
+#Enforces cross-compilation through Quemu
+RUN [ "cross-build-start" ]
+
+RUN install_packages \
+    sudo \
+    build-essential \
+    curl \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    wget \
+    git \
+    tar \
+    libatlas-base-dev \
+    cmake
+
+RUN pip3 install --upgrade pip setuptools wheel
+RUN pip3 install numpy
+
+# Set up build args
+ARG BUILDTYPE=MinSizeRel
+ARG BUILDARGS="--use_openmp --config ${BUILDTYPE} --arm"
+
+# Prepare onnxruntime Repo
+WORKDIR /code
+RUN git clone --single-branch --branch ${ONNXRUNTIME_SERVER_BRANCH} --recursive ${ONNXRUNTIME_REPO} onnxruntime
+
+# Start the basic build
+WORKDIR /code/onnxruntime
+# temporary remove buggy test
+RUN sed -i 59,62d onnxruntime/test/global_thread_pools/test_inference.cc
+# fix
+RUN echo 'set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")' >> cmake/CMakeLists.txt
+RUN ./build.sh ${BUILDARGS} --update --build
+
+# Build Shared Library
+RUN ./build.sh ${BUILDARGS} --build_shared_lib
+
+# Build Python Bindings and Wheel
+RUN ./build.sh ${BUILDARGS} --enable_pybind --build_wheel
+
+# Build Output
+RUN ls -l /code/onnxruntime/build/Linux/${BUILDTYPE}/*.so
+RUN ls -l /code/onnxruntime/build/Linux/${BUILDTYPE}/dist/*.whl
+
+RUN [ "cross-build-end" ]
