@@ -136,9 +136,10 @@ Now, encounter an error of:
 ```  
 Subprocess.CalledProcessError: Command '['/usr/local/bin/cmake', '--build', '/home/linaro/Downloads/onnxruntime/build/Linux/MinSizeRel', '--config', 'MinSizeRel']' returned non-zero exit status 2.
 ```
+  
 **/////////////////////////////////// BUILD_PROCESS TBC ///////////////////////////////////**
-Test by running `import onnxruntime`:
-Although it will report a warning message as below, it will not affect its functionality.
+  
+Test by running `import onnxruntime`: Although it will report a warning message as below, it will not affect its functionality.
 ```
 /home/linaro/.local/lib/python3.5/site-packages/onnxruntime/capi/onnxruntime_validation.py:22: UserWarning: Unsupported architecture (32bit). ONNX Runtime supports 64bit architecture, only.
 warnings.warn('Unsupported architecture (%s). ONNX Runtime supports 64bit architecture, only.' % __my_arch__)
@@ -255,6 +256,15 @@ sudo apt-get install curl
 sudo apt-get install libssl-dev libcurl4-openssl-dev
 ```
 
+8. **Crashed Chromium**
+After upgraded the Chromium browser in tinker board, you might find chromium is crashed and unable to be used. It might caused by the unstable version of chromium v68 or v69.
+**Solution:**
+```
+wget https://snapshot.debian.org/archive/debian-security/20180701T015633Z/pool/updates/main/c/chromium-browser/chromium_67.0.3396.87-1~deb9u1_armhf.deb
+sudo dpkg -i chromium_67.0.3396.87-1~deb9u1_armhf.deb
+sudo apt-mark hold chromium
+```
+  
   ## Reference
 - ROS installation guide for TinkerBoard. http://nascivera.it/2017/11/20/ros-installation-guide-for-tinkerboard/
 - ROS Tutorials. http://wiki.ros.org/ROS/Tutorials
