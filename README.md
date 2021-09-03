@@ -123,7 +123,14 @@ source install/setup.bash --extend
 Now, cv_bridge is available in Python 3
 
 ## Install ONNX
-(ongoing)
+Install pre-requistite libraries.
+```
+sudo apt-get install protobuf-compiler libprotoc-dev
+```
+Install the onnx module (the newest 1.10.1 receving error on python3.5)
+```
+pip3 install onnx==1.8.1
+```
 
 ## Install onnxruntime
 Onnxruntime is neither avaiable in ```pip3 install``` nor build from [source](https://github.com/microsoft/onnxruntime) due to the platform architecture of armv7l. The possible solution is build through docker, then extract the python wheel from docker.
@@ -256,7 +263,13 @@ sudo apt-get install curl
 sudo apt-get install libssl-dev libcurl4-openssl-dev
 ```
 
-8. **Crashed Chromium**
+8. **Catkin build cv_bridge error**
+```
+CMake Error at /usr/local/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake:230 (message): Could NOT find Boost (missing: python3) (found version "1.62.0")
+```
+
+  
+9. **Crashed Chromium**
 After upgraded the Chromium browser in tinker board, you might find chromium is crashed and unable to be used. It might caused by the unstable version of chromium v68 or v69.
 **Solution:**
 ```
