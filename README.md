@@ -96,9 +96,11 @@ Install packages needed for building cv_bridge
 sudo apt-get install python-catkin-tools python3-dev python3-numpy
 ```
 Create new catkin_build_ws to avoid any future problems with catkin_make(assuming you are using it) and config catkin to use your python 3(3.6 in my case) when building packages
-Install in system python
 ```
 mkdir -p ~/catkin_build_ws/src && cd ~/catkin_build_ws
+```
+Install in system python
+```
 catkin config -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.5m -DPYTHON_LIBRARY=/usr/lib/arm-linux-gnueabihf/libpython3.5m.so
 catkin config --install
 ```
@@ -129,7 +131,7 @@ sudo apt-get install protobuf-compiler libprotoc-dev
 ```
 Install the onnx module (the newest 1.10.1 receving error on python3.5)
 ```
-pip3 install onnx==1.8.1
+pip3 install onnx==1.8.1 --user
 ```
 
 ## Install onnxruntime
@@ -265,9 +267,42 @@ sudo apt-get install libssl-dev libcurl4-openssl-dev
 
 8. **Catkin build cv_bridge error**
 ```
-CMake Error at /usr/local/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake:230 (message): Could NOT find Boost (missing: python3) (found version "1.62.0")
+CMake Error at /usr/local/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake:230 (message):
+ Could NOT find Boost (missing: python3) (found version "1.62.0")
 ```
+**Solution:**
 
+According to the [official Cmake documentation](https://cmake.org/cmake/help/v3.21/module/FindBoost.html), FindBoost cmake-module find_package() function only support Boost 1.67.0 or newer, therefore need to switch to older version of cmake (e.g., default cmake version of 3.7.2 which find_package() support Boost 1.36.0).
+Go to the cmake 3.21 source package and uninstall it, e.g.:
+```
+cd ~/Downloads/cmake-3.21.1/
+sudo make uninstall
+```
+Then you may encounter another issue while catkin build the cv_bridge. 
+```
+CMake Error at /usr/share/cmake-3.7/Modules/FindBoost.cmake:1831 (message):
+  Unable to find the requested Boost libraries.
+
+  Boost version: 1.62.0
+
+  Boost include path: /usr/include
+
+  Could not find the following Boost libraries:
+
+          boost_python3
+
+  No Boost libraries were found.  You may need to set BOOST_LIBRARYDIR to the
+  directory containing Boost libraries or BOOST_ROOT to the location of
+  Boost.
+```
+**Solution:**
+
+Accroding to [this issue](https://github.com/ros/ros-overlay/issues/581#issuecomment-445942798), the boost_python3 libraries names got changed in cv_bridge. In /usr/lib/arm-linux-gnueabihf/ for TinkerOS, the library is named libboost_python-py35.so, while it is named libboost_python3.so in the github thread. Creating a symbolic link with this latter name resolved this error.
+```
+cd /usr/lib/arm-linux-gnueabihf
+sudo ln -s libboost_python-py35.so libboost_python3.so
+sudo ln -s libboost_python-py35.a libboost_python3.a
+```
   
 9. **Crashed Chromium**
 
@@ -278,10 +313,9 @@ wget https://snapshot.debian.org/archive/debian-security/20180701T015633Z/pool/u
 sudo dpkg -i chromium_67.0.3396.87-1~deb9u1_armhf.deb
 sudo apt-mark hold chromium
 ```
-  
-  ## Reference
-- ROS installation guide for TinkerBoard. http://nascivera.it/2017/11/20/ros-installation-guide-for-tinkerboard/
-- ROS Tutorials. http://wiki.ros.org/ROS/Tutorials
+
+## Reference
+- ROS installation guide for TinkerBoard. http://nascivera.it/2017/11/20/ros-installation-guide-for-tinkerboard/- ROS Tutorials. http://wiki.ros.org/ROS/Tutorials
 - ROS Python2 & Python3 conflict Resolve. https://rancheng.github.io/ros-python2-3-conflict/
 - ONNX github. https://github.com/onnx/onnx
 - Microsoft onnxruntime github. https://github.com/microsoft/onnxruntime
