@@ -105,7 +105,7 @@ catkin config --install
 or install under miniconda
 ```
 mkdir -p ~/catkin_build_ws/src && cd ~/catkin_build_ws
-catkin config -DPYTHON_EXECUTABLE=/home/ran/miniconda3/bin/python3 -DPYTHON_INCLUDE_DIR=/home/ran/miniconda3/bin/python3.5m -DPYTHON_LIBRARY=/home/ran/miniconda3/lib/libpython3.5m.so
+catkin config -DPYTHON_EXECUTABLE=/home/linaro/miniconda3/bin/python3 -DPYTHON_INCLUDE_DIR=/home/linaro/miniconda3/bin/python3.5m -DPYTHON_LIBRARY=/home/linaro/miniconda3/lib/libpython3.5m.so
 catkin config --install
 ```
 clone official vision_opencv repo:
@@ -270,6 +270,7 @@ CMake Error at /usr/local/share/cmake-3.21/Modules/FindPackageHandleStandardArgs
 
   
 9. **Crashed Chromium**
+
 After upgraded the Chromium browser in tinker board, you might find chromium is crashed and unable to be used. It might caused by the unstable version of chromium v68 or v69.
 **Solution:**
 ```
