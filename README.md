@@ -2,7 +2,7 @@
 This repository introduces how to install ROS 1, Melodic, in ASUS Tinker board under Tinker OS.
 
 ## Hardware
-- ASUS Tinker board
+- ASUS Tinker board S
 ## Software
 - TinkerOS Debian Stretch v2.1.16
 
@@ -12,6 +12,7 @@ This repository introduces how to install ROS 1, Melodic, in ASUS Tinker board u
 Open a linux terminal shell.
 To compile ROS in tinker board,
 1. Add the ROS repository to your sources.list to accept software from packages.ros.org
+
 2. Download a key from keyserver directly into the trusted set of keys
 ```
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -135,26 +136,84 @@ pip3 install onnx==1.8.1 --user
 ```
 
 ## Install onnxruntime
-Onnxruntime is neither avaiable in ```pip3 install``` nor build from [source](https://github.com/microsoft/onnxruntime) due to the platform architecture of armv7l. The possible solution is build through docker, then extract the python wheel from docker.
-- Install docker
+[ONNX Runtime](https://github.com/microsoft/onnxruntime) is a cross-platform, high performance scoring engine for ML models. You can get Python bindings for Linux, Windows, Mac on x64 and arm64 platform from [pypi](https://pypi.org/project/onnxruntime/#files). Onnxruntime is neither avaiable in ```pip3 install``` nor build from [source](https://github.com/microsoft/onnxruntime) due to the platform architecture of armv7l. The possible solution is build through docker, then extract the python wheel from docker.
+
+The Dockerfile used in these instructions specifically targets Raspberry Pi 3/3+ running Raspbian Stretch and Tinker Board running TinkerOS. The same approach should be working for other ARM devices, but may require some changes to the [Dockerfile](https://github.com/lawkee48/TinkerOS_ROS/Dockerfile.arm32v7) such as choosing a different base image (Line 0: FROM ...).
+  
+Critical changes to make in **Dockerfile.arm32v7**:
+- Line0: FROM ... (Please select the specific base image from [Dockerhub](https://hub.docker.com/r/balenalib/raspberrypi3-python/tags?page=1&ordering=last_updated) with the python version that you want)
+- Line7: ARG ONNXRUNTIME_SERVER_BRANCH=... (Please select the specific branch of the onnxruntime version that you want to build, you may want to [match with your ONNX version](https://github.com/microsoft/onnxruntime/blob/master/docs/Versioning.md))
+
+1. Install dependencies:
+
+- Install DockerCE
+
 command ```curl -sSL https://get.docker.com/ | sh``` doesn't work, it ends up with an error ```E: Unable to locate package docker-ce-rootless-extras```, because Debian 9 reached EOL and no longer supported, the required package is only available from Ubuntu 20.x (see [here](https://github.com/docker/docker-install/issues/222)).
 
 To solve this problem, follow the manual installation procedure (Section: Install from a package) from https://docs.docker.com/engine/install/debian/. I recommand to select the v19.03.15 of Docker since it works for the [others](https://forums.docker.com/t/google-unable-to-locate-package-docker-ce-rootless-extras/107071/2).
+- Install ARM emulator
+```
+sudo apt-get install -y qemu-user-static
+```
 
-Now, encounter an error of:
-```  
-Subprocess.CalledProcessError: Command '['/usr/local/bin/cmake', '--build', '/home/linaro/Downloads/onnxruntime/build/Linux/MinSizeRel', '--config', 'MinSizeRel']' returned non-zero exit status 2.
+2. Create an empty local directory
+
+```
+mkdir onnx-build
+cd onnx-build
+```
+
+3. Save the Dockerfile from this repo to your new directory: [Dockfile.arm32v7](https://github.com/lawkee48/TinkerOS_ROS/Dockerfile.arm32v7)
+
+4. Rund docker build
+
+This will build all the dependencies first, then build ONNX Runtime and its Python bindings. This will take several hours.
+```
+docker build -t onnxruntime-arm32v7 -f Dockerfile.arm32v7 .
 ```
   
-**/////////////////////////////////// BUILD_PROCESS TBC ///////////////////////////////////**
+5. Note the full path of the `.whl` file
   
+- Reported at the end of the build after the `# Build Output` line.
+- it should be follow the format `onnxruntime-0.3.0-cp35-cp35m-linux_armv7l.whl`, but version number may have changed. You'll use this path to extract the wheel file later.
+  
+6. Check that the build succeeded
+
+Upon completion, you should see an image tagged `onnxruntime-arm32v7`in your list of docker images:
+```
+docker images  
+```
+  
+7. Extract the Python wheel file from the docker image 
+  
+(Update the path/version of the .whl file with the one noted in step 5)
+```
+docker create -ti --name onnxruntime_temp onnxruntime-arm32v7 bash
+docker cp onnxruntime_temp:/code/onnxruntime/build/Linux/MinSizeRel/dist/onnxruntime-0.3.0-cp35-cp35m-linux_armv7l.whl .
+docker rm -fv onnxruntime_temp
+```
+This will save a copy of the wheel file, `onnxruntime-0.3.0-cp35-cp35m-linux_armv7l.whl`, to your working directory on your host machine.
+  
+8. Copy the wheel file (`onnxruntime-0.3.0-cp35-cp35m-linux_armv7l.whl`) to your Raspberry Pi or other ARM device  
+  
+9. On device, install the ONNX Runtime wheel file
+```
+sudo apt-get update
+sudo apt-get install -y python3 python3-pip
+pip3 install numpy
+
+# Install ONNX Runtime
+# Important: Update path/version to match the name and location of your .whl file
+pip3 install onnxruntime-0.3.0-cp35-cp35m-linux_armv7l.whl
+```
+
 Test by running `import onnxruntime`: Although it will report a warning message as below, it will not affect its functionality.
 ```
 /home/linaro/.local/lib/python3.5/site-packages/onnxruntime/capi/onnxruntime_validation.py:22: UserWarning: Unsupported architecture (32bit). ONNX Runtime supports 64bit architecture, only.
 warnings.warn('Unsupported architecture (%s). ONNX Runtime supports 64bit architecture, only.' % __my_arch__)
 ```
 
-  ## Error message 
+## Error message 
 1. **ImportError: No module named Cryptodome.Cipher**
 
 Solution:
@@ -169,13 +228,10 @@ Solution:
 sudo apt-get install python3-pip python3-yaml
 sudo pip3 install rospkg catkin_pkg
 ```
-3. **rospack error**
+3. **rospack error (remain unsolved)**
 ```
 terminate called after throwing an instance of 'rospack::Exception' what(): error parsing manifest of package rosmaster at /opt/ros/melodic/share/rosmaster/package.xml
 aborted
-```
-```
-remain unsolved
 ```
 
 4. **Could not find sensor_msgs packages**
@@ -223,6 +279,7 @@ build [ERROR] - Failed to resolve executable path for 'cmake'.
 Install cmake on your host machine.
   
 7. **build cmake error:**
+
 **error 1**
 ```
 CMake Error at Utilities/cmcurl/CMakeLists.txt:525 (message):
