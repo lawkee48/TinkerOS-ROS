@@ -1,8 +1,6 @@
-## About this repository
+The project does not provide pre-built packages for Raspbery Pi Linux 32bit (ARM32v7) as of today. Instead it has an instruction on [how to build ONNX Runtime from the source code](https://github.com/microsoft/onnxruntime/blob/master/BUILD.md).
 
-[ONNX Runtime](https://github.com/microsoft/onnxruntime) is a cross-platform, high performance scoring engine for ML models. You can get Python bindings for Linux, Windows, Mac on x64 and arm64 platform from [pypi](https://pypi.org/project/onnxruntime/#files). The project does not provide pre-built packages for Raspbery Pi Linux 32bit (ARM32v7) as of today. Instead it has an instruction on [how to build ONNX Runtime from the source code](https://github.com/microsoft/onnxruntime/blob/master/BUILD.md).
-
-Building package takes a lot of time. This repository provides pre-built Python ONNX Runtime packages for Raspberry pi for convenience.
+Building packages takes 5-6 hours of time. This repository provides pre-built Python ONNX Runtime packages for Raspberry pi for convenience.
 
 There is NO WARRANTY of any kind at all.
 
