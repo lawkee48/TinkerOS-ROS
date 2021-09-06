@@ -159,6 +159,10 @@ sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev
 
 pip3 install scipy
 ```
+If the process of building scipy failed, there is another way by download the [python wheel](https://www.piwheels.org/simple/scipy/) and install it via:
+```
+pip3 install scipy-1.3.3-cp35-cp35m-linux_armv7l.whl
+```
 
 ## Install Pillow
 ```
