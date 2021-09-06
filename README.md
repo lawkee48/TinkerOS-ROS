@@ -1,5 +1,5 @@
 # TinkerOS_ROS
-This repository introduces how to install ROS 1, Melodic, in ASUS Tinker board under Tinker OS.
+This repository introduces how to install ROS 1(Melodic) and the corresponding packages in python3 in order to run facial detection&recognition in ASUS Tinker board under Tinker OS.
 
 ## Hardware
 - ASUS Tinker board S
@@ -16,7 +16,7 @@ This repository introduces how to install ROS 1, Melodic, in ASUS Tinker board u
 - onnx
 - onnxruntime
 ## repo directory
-**python wheel**: contain the python wheel of python3.5 and python3.6 for convenience
+**python wheel**: contain the python wheel of python3.5~3.8 for arm32 devices (for convenience)
 
 # ROS download and installation in TinkerOS
 
@@ -320,7 +320,7 @@ PermissionError: [Errno 1] Operation not permitted
 ```
 
 **Solution:**
-It can be resolved by downloading and installing a newer `libseccomp2.deb`.
+It can be resolved by updating `libseccomp2.deb` package. Downloading and installing a newer `libseccomp2.deb` from source and install it:
 ```
 wget http://ftp.us.debian.org/debian/pool/main/libs/libseccomp/libseccomp2_2.5.1-1_armhf.deb
 sudo dpkg -i libseccomp2_2.5.1-1_armhf.deb
