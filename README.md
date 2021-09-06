@@ -4,7 +4,17 @@ This repository introduces how to install ROS 1, Melodic, in ASUS Tinker board u
 ## Hardware
 - ASUS Tinker board S
 ## Software
-- TinkerOS Debian Stretch v2.1.16
+- TinkerOS Debian Stretch v2.1.
+- ROS1 Melodic
+- python3.5
+- numpy
+- scipy
+- pillow
+- opencv-python
+- pytorch
+- torchvision
+- onnx
+- onnxruntime
 
 # ROS download and installation in TinkerOS
 
@@ -92,15 +102,23 @@ echo $ROS_PACKAGE_PATH
 and it should return '/home/<username>/catkin_ws/src:/opt/ros/melodic/share'
 
 ## Build cv_bridge for python3
-Install packages needed for building cv_bridge
+
+A most simple one would be installed from the Ubuntu terminal:
+```
+sudo apt-get install ros-(ROS version name)-cv-bridge
+sudo apt-get install ros-(ROS version name)-vision-opencv
+```
+However, it does not work in my case. So, another is tried by visit the official ROS page of that required package and download the zip file. Move the extracted package inside the catkin workspace and install it.
+
+- Install packages needed for building cv_bridge
 ```
 sudo apt-get install python-catkin-tools python3-dev python3-numpy
 ```
-Create new catkin_build_ws to avoid any future problems with catkin_make(assuming you are using it) and config catkin to use your python 3(3.6 in my case) when building packages
+- Create new catkin_build_ws to avoid any future problems with catkin_make(assuming you are using it) and config catkin to use your python 3(3.6 in my case) when building packages
 ```
 mkdir -p ~/catkin_build_ws/src && cd ~/catkin_build_ws
 ```
-Install in system python
+- Install in system python
 ```
 catkin config -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_INCLUDE_DIR=/usr/include/python3.5m -DPYTHON_LIBRARY=/usr/lib/arm-linux-gnueabihf/libpython3.5m.so
 catkin config --install
@@ -111,19 +129,48 @@ mkdir -p ~/catkin_build_ws/src && cd ~/catkin_build_ws
 catkin config -DPYTHON_EXECUTABLE=/home/linaro/miniconda3/bin/python3 -DPYTHON_INCLUDE_DIR=/home/linaro/miniconda3/bin/python3.5m -DPYTHON_LIBRARY=/home/linaro/miniconda3/lib/libpython3.5m.so
 catkin config --install
 ```
-clone official vision_opencv repo:
+- clone official vision_opencv repo:
 ```
 cd src
 git clone -b melodic https://github.com/ros-perception/vision_opencv.git
 pip3 install catkin_pkg 
 ```
-Finally, build and source the package:
+- Finally, build and source the package:
 ```
 cd ~/catkin_build_ws
 catkin build cv_bridge
 source install/setup.bash --extend
 ```
 Now, cv_bridge is available in Python 3
+
+# Install Python libraries
+## Install numpy
+```
+sudo apt install python3-dev build-essential
+pip3 install numpy --user
+```
+
+## Install scipy
+```
+# Install gfortran for compile
+sudo apt-get install gfortran
+# Install blas, lapack, atlas for OS related tasks
+sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev
+
+pip3 install scipy
+```
+
+## Install Pillow
+```
+pip3 install Pillow
+```
+
+## Install OpenCV
+```
+pip3 install --upgrade pip
+pip3 install setuptools
+pip3 install opencv-python
+```  
 
 ## Install ONNX
 Install pre-requistite libraries.
@@ -132,7 +179,7 @@ sudo apt-get install protobuf-compiler libprotoc-dev
 ```
 Install the onnx module (the newest 1.10.1 receving error on python3.5)
 ```
-pip3 install onnx==1.8.1 --user
+pip3 install onnx==1.8.1 --user    # or other version
 ```
 
 ## Install onnxruntime
@@ -379,3 +426,4 @@ sudo apt-mark hold chromium
 - NagarajSMurthy RaspberryPi-ONNX-Runtime github. https://github.com/NagarajSMurthy/RaspberryPi-ONNX-Runtime
 - ankane onnxruntime github. https://github.com/ankane/onnxruntime-1
 - SAj1234 onnxruntime github. https://github.com/Saj1234/onnxruntime
+- 菜鸟落泪：debian 9 安装 python 库记录. https://blog.csdn.net/tangshopping/article/details/97265438
