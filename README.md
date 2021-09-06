@@ -15,6 +15,8 @@ This repository introduces how to install ROS 1, Melodic, in ASUS Tinker board u
 - torchvision
 - onnx
 - onnxruntime
+## repo directory
+**python wheel**: contain the python wheel of python3.5 and python3.6 for convenience
 
 # ROS download and installation in TinkerOS
 
@@ -91,7 +93,8 @@ catkin_make
 ```
 (**catkin_make** is a convenient tool for working with catkin workspaces.
 It will create 'build', 'devel' and 'src' folders with CMakeLists.txt.
-In 'devel' folder, there are several setup.*sh files, sourcing any of these files will overlay this workspace on top of your environment.)
+In 'devel' folder, there are several **setup.sh** files, sourcing any of these files will overlay this workspace on top of your environment.)
+
 ```
 source devel/setup.bash
 ```
@@ -99,7 +102,7 @@ To make sure your workspace is properly overlayed by the setup script, make sure
 ```
 echo $ROS_PACKAGE_PATH
 ```
-and it should return '/home/<username>/catkin_ws/src:/opt/ros/melodic/share'
+and it should return `/home/<username>/catkin_ws/src:/opt/ros/melodic/share`
 
 ## Build cv_bridge for python3
 
@@ -264,6 +267,11 @@ Test by running `import onnxruntime`: Although it will report a warning message 
 warnings.warn('Unsupported architecture (%s). ONNX Runtime supports 64bit architecture, only.' % __my_arch__)
 ```
 
+## Test the imx219 camera
+```
+gst-launch-1.0 rkcamsrc device=/dev/video0 io-mode=4 isp-mode=2A tuning-xml-path=/etc/cam_iq/IMX219.xml ! video/x-raw,format=NV12,width=640,height=480 ! rkximagesink
+```
+  
 ## Error message 
 1. **ImportError: No module named Cryptodome.Cipher**
 
