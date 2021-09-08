@@ -179,15 +179,27 @@ pip3 install setuptools
 pip3 install opencv-python
 ```  
 
-## Install ONNX
-Install pre-requistite libraries.
+## Install pytorch
+Search for corresponding libopenblas package and install it
 ```
-sudo apt-get install protobuf-compiler libprotoc-dev
+sudo apt-cache search libopenblas
+sudo apt install libopenblas-dev
+```
+Download the torch python wheel [here](https://drive.google.com/drive/folders/1zgvdh3vE0ZbFI0uPPQUfn5dlrB8aeIax?usp=sharing) and install it
+```
+pip3 install torch-0.4.0a0+3749c58-cp35-cp35m-linux_armv7l.whl
+```
+
+## Install ONNX
+Install the library dependencies.
+```
+sudo apt-get install protobuf-compiler libprotoc-dev pybind11
 ```
 Install the onnx module (the newest 1.10.1 receving error on python3.5)
 ```
 pip3 install onnx==1.8.1 --user    # or other version
 ```
+If **anything goes wrong**, you can still follow the [guideline](https://dev.to/mshr_h/how-to-build-onnx-onnx-for-your-armv7l-devices-3cm5) to build the ONNX via Docker.
 
 ## Install onnxruntime
 [ONNX Runtime](https://github.com/microsoft/onnxruntime) is a cross-platform, high performance scoring engine for ML models. You can get Python bindings for Linux, Windows, Mac on x64 and arm64 platform from [pypi](https://pypi.org/project/onnxruntime/#files). Onnxruntime is neither avaiable in ```pip3 install``` nor build from [source](https://github.com/microsoft/onnxruntime) due to the platform architecture of armv7l. The possible solution is build through docker, then extract the python wheel from docker.
