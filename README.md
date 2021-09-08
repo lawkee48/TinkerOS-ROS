@@ -495,4 +495,4 @@ sudo apt-mark hold chromium
 - ankane onnxruntime github. https://github.com/ankane/onnxruntime-1
 - SAj1234 onnxruntime github. https://github.com/Saj1234/onnxruntime
 - 菜鸟落泪：debian 9 安装 python 库记录. https://blog.csdn.net/tangshopping/article/details/97265438
-- Tinker Board Wiki. CSI camera 2.0.8. tinkerboarding.co.uk/wiki/index.php/CSI-camera-2.0.8
+- Tinker Board Wiki. CSI camera 2.0.8. https://tinkerboarding.co.uk/wiki/index.php/CSI-camera-2.0.8
