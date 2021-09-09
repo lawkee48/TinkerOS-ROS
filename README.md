@@ -5,16 +5,16 @@ This repository introduces how to install ROS 1(Melodic) and the corresponding p
 - ASUS Tinker board S
 ## Software
 - TinkerOS Debian Stretch v2.1.16
-- ROS1 Melodic
-- python3.5
-- numpy
-- scipy
-- pillow
-- opencv-python
-- pytorch
-- torchvision
-- onnx
-- onnxruntime
+- ROS == Melodic
+- python == 3.5
+- numpy == 1.18.5
+- scipy == 1.3.3 
+- pillow == 7.2.0
+- opencv-python == 3.3.0
+- pytorch == 1.0.0
+- torchvision == 0.2.2
+- onnx == 1.6.0
+- onnxruntime == 1.1.0
 ## repo directory
 **python wheel**: contain the python wheel of python3.5~3.8 for arm32 devices (for convenience)
 
