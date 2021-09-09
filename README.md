@@ -185,10 +185,17 @@ Search for corresponding libopenblas package and install it
 sudo apt-cache search libopenblas
 sudo apt install libopenblas-dev
 ```
-Download the torch python wheel [here](https://drive.google.com/drive/folders/1zgvdh3vE0ZbFI0uPPQUfn5dlrB8aeIax?usp=sharing) and install it
+Download the torch [python wheel](https://github.com/lawkee48/TinkerOS_ROS/tree/main/python_wheel) and install it
 ```
-pip3 install torch-0.4.0a0+3749c58-cp35-cp35m-linux_armv7l.whl
+pip3 install torch-1.0.0a0+8322165-cp35-cp35m-linux_armv7l.whl
 ```
+
+## Install torchvision
+If your torch version is <=1.0.1, please make sure you are installing the torchvision 0.2.2. The compatability of python3.5 only allow pytorch up to 1.5.1 with torchvision up to 0.6.1.
+```
+pip3 install torchvision
+```
+
 
 ## Install ONNX
 Install the library dependencies.
