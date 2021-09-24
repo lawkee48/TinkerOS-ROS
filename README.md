@@ -1,4 +1,4 @@
-# TinkerOS_ROS
+# TinkerOS-ROS
 This repository introduces how to install ROS 1(Melodic) and the corresponding packages in python3 in order to run facial detection&recognition in ASUS Tinker board under Tinker OS.
 
 ## Hardware
