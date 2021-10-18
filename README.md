@@ -448,7 +448,7 @@ OpenCV need to be compiled with the v4l support enabling. First uninstall the Op
 ```
 pip3 uninstall opencv-python
 ```
-Then, make and install the OpenCV from source according to [tinekr board wiki]()
+Then, make and install the OpenCV from source according to [tinekr board wiki](https://tinkerboarding.co.uk/wiki/index.php/CSI-camera-2.0.8)
 ```
 # Install
 sudo apt-get update
