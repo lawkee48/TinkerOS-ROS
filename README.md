@@ -108,8 +108,8 @@ and it should return `/home/<username>/catkin_ws/src:/opt/ros/melodic/share`
 
 The default ROS official cv_bridge only support ***Python 2***:
 ```
-sudo apt-get install ros-(ROS version name)-cv-bridge
-sudo apt-get install ros-(ROS version name)-vision-opencv
+sudo apt-get install ros-(ROS version name)-cv-bridge        # only for python 2
+sudo apt-get install ros-(ROS version name)-vision-opencv    # only for python 2
 ```
 So if we want to use it in Python3, we build from source ourselves. Visit the official ROS page of that required package and download the zip file. Move the extracted package inside the catkin workspace and install it.
 
@@ -138,6 +138,8 @@ cd src
 git clone -b melodic https://github.com/ros-perception/vision_opencv.git
 pip3 install catkin_pkg 
 ```
+***Note: melodic branch require OpenCV 3.3.0***
+
 - Finally, build and source the package:
 ```
 cd ~/catkin_build_ws
@@ -173,11 +175,45 @@ pip3 install Pillow
 ```
 
 ## Install OpenCV
+Melodic require OpenCV 3.3.0 by default and OpenCV need to be compiled with the v4l support enabling. Otherwise, you may encounter **AttributeError: 'NoneType' object has no attribute 'shape'**.\
+First uninstall the OpenCV you have installed in python3.
 ```
-pip3 install --upgrade pip
-pip3 install setuptools
-pip3 install opencv-python
-```  
+pip3 uninstall opencv-python
+```
+Then, make and install the OpenCV from source according to [tinekr board wiki](https://tinkerboarding.co.uk/wiki/index.php/CSI-camera-2.0.8)
+```
+# Install
+sudo apt-get update
+# Install a few developer tools
+sudo apt-get install -y build-essential git cmake pkg-config
+# Install image I/O packages which allow us to load image file formats such as JPEG, PNG, TIFF, etc.
+sudo apt-get install -y libjpeg-dev libtiff5-dev libpng-dev
+# Install video I/O packages
+sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+# Install the GTK development library
+sudo apt-get install -y libgtk2.0-dev
+# Various operations inside of OpenCV (such as matrix operations) can be optimized using added dependencies
+sudo apt-get install -y libatlas-base-dev gfortran
+# Install the Python 2.7 and Python 3 header files 
+sudo apt-get install -y python2.7-dev python3-dev python-opencv
+# Others
+sudo apt-get install -y python3-pip python3-numpy libtcmalloc-minimal4 glib-2.0 libboost-all-dev
+
+wget -O opencv.zip https://github.com/opencv/opencv/archive/3.3.0.zip
+unzip opencv.zip
+wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/3.3.0.zip
+unzip opencv_contrib.zip
+cd ~/opencv-3.3.0/
+mkdir build
+cd build
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
+  -D WITH_LIBV4L=ON \
+  -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-3.3.0/modules \
+  -D CMAKE_INSTALL_PREFIX=/usr/local ..
+sudo make install -j4
+sudo ldconfig
+```
+**Be aware of the those paths according to your own situation**
 
 ## Install pytorch
 Search for corresponding libopenblas package and install it
@@ -439,51 +475,7 @@ sudo ln -s libboost_python-py35.so libboost_python3.so
 sudo ln -s libboost_python-py35.a libboost_python3.a
 ```
 
-9. **OpenCV read camera error**
-```
-AttributeError: 'NoneType' object has no attribute 'shape'
-```
-**Solution:**
-OpenCV need to be compiled with the v4l support enabling. First uninstall the OpenCV you have installed in python3.
-```
-pip3 uninstall opencv-python
-```
-Then, make and install the OpenCV from source according to [tinekr board wiki](https://tinkerboarding.co.uk/wiki/index.php/CSI-camera-2.0.8)
-```
-# Install
-sudo apt-get update
-# Install a few developer tools
-sudo apt-get install -y build-essential git cmake pkg-config
-# Install image I/O packages which allow us to load image file formats such as JPEG, PNG, TIFF, etc.
-sudo apt-get install -y libjpeg-dev libtiff5-dev libpng-dev
-# Install video I/O packages
-sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-# Install the GTK development library
-sudo apt-get install -y libgtk2.0-dev
-# Various operations inside of OpenCV (such as matrix operations) can be optimized using added dependencies
-sudo apt-get install -y libatlas-base-dev gfortran
-# Install the Python 2.7 and Python 3 header files 
-sudo apt-get install -y python2.7-dev python3-dev python-opencv
-# Others
-sudo apt-get install -y python3-pip python3-numpy libtcmalloc-minimal4 glib-2.0 libboost-all-dev
-
-wget -O opencv.zip https://github.com/opencv/opencv/archive/3.3.0.zip
-unzip opencv.zip
-wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/3.3.0.zip
-unzip opencv_contrib.zip
-cd ~/opencv-3.3.0/
-mkdir build
-cd build
-cmake -D CMAKE_BUILD_TYPE=RELEASE \
-  -D WITH_LIBV4L=ON \
-  -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-3.3.0/modules \
-  -D CMAKE_INSTALL_PREFIX=/usr/local ..
-sudo make install -j4
-sudo ldconfig
-```
-**Be aware of the those paths according to your own situation**
-
-10. **Crashed Chromium**
+9. **Crashed Chromium**
 
 After upgraded the Chromium browser in tinker board, you might find chromium is crashed and unable to be used. It might caused by the unstable version of chromium v68 or v69.
 **Solution:**
