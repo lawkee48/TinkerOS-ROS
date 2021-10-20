@@ -106,12 +106,12 @@ and it should return `/home/<username>/catkin_ws/src:/opt/ros/melodic/share`
 
 ## Build cv_bridge for python3
 
-A most simple one would be installed from the Ubuntu terminal:
+The default ROS official cv_bridge only support ***Python 2***:
 ```
 sudo apt-get install ros-(ROS version name)-cv-bridge
 sudo apt-get install ros-(ROS version name)-vision-opencv
 ```
-However, it does not work for Python3. So, another is tried by visit the official ROS page of that required package and download the zip file. Move the extracted package inside the catkin workspace and install it.
+So if we want to use it in Python3, we build from source ourselves. Visit the official ROS page of that required package and download the zip file. Move the extracted package inside the catkin workspace and install it.
 
 - Install packages needed for building cv_bridge
 ```
