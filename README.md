@@ -111,13 +111,13 @@ A most simple one would be installed from the Ubuntu terminal:
 sudo apt-get install ros-(ROS version name)-cv-bridge
 sudo apt-get install ros-(ROS version name)-vision-opencv
 ```
-However, it does not work in my case. So, another is tried by visit the official ROS page of that required package and download the zip file. Move the extracted package inside the catkin workspace and install it.
+However, it does not work for Python3. So, another is tried by visit the official ROS page of that required package and download the zip file. Move the extracted package inside the catkin workspace and install it.
 
 - Install packages needed for building cv_bridge
 ```
 sudo apt-get install python-catkin-tools python3-dev python3-numpy
 ```
-- Create new catkin_build_ws to avoid any future problems with catkin_make(assuming you are using it) and config catkin to use your python 3(3.6 in my case) when building packages
+- Create new catkin_build_ws to avoid any future problems with catkin_make(assuming you are using it) and config catkin to use your python 3(3.5 in my case) when building packages
 ```
 mkdir -p ~/catkin_build_ws/src && cd ~/catkin_build_ws
 ```
